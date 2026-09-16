@@ -1,5 +1,10 @@
+Python
+import os
 import requests
 from datetime import datetime
+
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 SUPABASE_URL = "https://nizpwabxszlsscbewtro.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5penB3YWJ4c3psc3NjYmV3dHJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MzMzODYsImV4cCI6MjEwNTEwOTM4Nn0.Ej7cw2jGIg7-PHg_FRHmP63zgEX0P7BO5DaJVNjrC8Y"
