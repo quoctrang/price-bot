@@ -24,21 +24,51 @@ def save_to_supabase(product_data):
         print(f"Lỗi kết nối Supabase: {e}")
 
 def sync_products():
-    print("Đang nạp dữ liệu sản phẩm kèm hình ảnh...")
+    print("Đang nạp lại dữ liệu sản phẩm kèm link ảnh chuẩn...")
     
-    # Danh sách sản phẩm có đầy đủ link ảnh chuẩn
+    # Sử dụng link hình ảnh minh họa ổn định, sắc nét
     sample_products = [
-        {"product_code": "bhx_01", "name": "Mì Hảo Hảo chua cay thùng 30 gói", "price": 125000, "store": "Bách Hóa Xanh", "image_url": "https://cdn.tgdd.vn/Products/Images/42/86737/bhx/thung-30-goi-mi-hao-hao-chua-cay-75g-202004151441315629.jpg"},
-        {"product_code": "bhx_02", "name": "Thùng 24 lon nước ngọt Coca Cola 320ml", "price": 205000, "store": "Bách Hóa Xanh", "image_url": "https://cdn.tgdd.vn/Products/Images/2433/74929/bhx/thung-24-lon-nuoc-giai-khat-coca-cola-320ml-202206221008272996.jpg"},
-        {"product_code": "bhx_03", "name": "Sữa tươi tiệt trùng Vinamilk ít đường lốc 4 hộp 180ml", "price": 32000, "store": "Bách Hóa Xanh", "image_url": "https://cdn.tgdd.vn/Products/Images/2386/194451/bhx/loc-4-hop-sua-tuoi-tiet-trung-it-duong-vinamilk-180ml-202303081442116035.jpg"},
-        {"product_code": "bhx_04", "name": "Dầu ăn Neptune Light 1L", "price": 58000, "store": "Bách Hóa Xanh", "image_url": "https://cdn.tgdd.vn/Products/Images/2455/229983/bhx/dau-an-cao-cap-neptune-light-chai-1-lit-202009211607593259.jpg"},
-        {"product_code": "bhx_05", "name": "Nước giặt OMO Matic đậm đặc cửa trên 3.1kg", "price": 165000, "store": "Bách Hóa Xanh", "image_url": "https://cdn.tgdd.vn/Products/Images/2464/228198/bhx/tu-nhua-dung-do-da-nang-dai-loan-202009081512411234.jpg"}
+        {
+            "product_code": "bhx_01", 
+            "name": "Mì Hảo Hảo chua cay thùng 30 gói", 
+            "price": 125000, 
+            "store": "Bách Hóa Xanh", 
+            "image_url": "https://images.unsplash.com/photo-1612927601601-6638404738ad?w=150&auto=format&fit=crop&q=80"
+        },
+        {
+            "product_code": "bhx_02", 
+            "name": "Thùng 24 lon nước ngọt Coca Cola 320ml", 
+            "price": 205000, 
+            "store": "Bách Hóa Xanh", 
+            "image_url": "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=150&auto=format&fit=crop&q=80"
+        },
+        {
+            "product_code": "bhx_03", 
+            "name": "Sữa tươi tiệt trùng Vinamilk ít đường lốc 4 hộp 180ml", 
+            "price": 32000, 
+            "store": "Bách Hóa Xanh", 
+            "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=150&auto=format&fit=crop&q=80"
+        },
+        {
+            "product_code": "bhx_04", 
+            "name": "Dầu ăn Neptune Light 1L", 
+            "price": 58000, 
+            "store": "Bách Hóa Xanh", 
+            "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=150&auto=format&fit=crop&q=80"
+        },
+        {
+            "product_code": "bhx_05", 
+            "name": "Nước giặt OMO Matic đậm đặc cửa trên 3.1kg", 
+            "price": 165000, 
+            "store": "Bách Hóa Xanh", 
+            "image_url": "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=150&auto=format&fit=crop&q=80"
+        }
     ]
 
     for p in sample_products:
         save_to_supabase(p)
         time.sleep(0.2)
-    print("Đã nạp xong toàn bộ sản phẩm kèm ảnh!")
+    print("Đã hoàn tất nạp lại dữ liệu!")
 
 if __name__ == "__main__":
     sync_products()
