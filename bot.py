@@ -21,7 +21,7 @@ def sync_products():
             "name": "Mì Hảo Hảo chua cay thùng 30 gói", 
             "price": 125000, 
             "store": "Bách Hóa Xanh", 
-            "image_url": "https://www.lottemart.vn/media/catalog/product/cache/0x0/8/9/8934563305048.jpg.webp"
+            "image_url": "https://down-vn.img.susercontent.com/file/sg-11134201-23010-er2h7qw0uxmv6f"
         },
         {
             "product_code": "bhx_02", 
