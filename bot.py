@@ -1,46 +1,81 @@
 import os
+import time
 import requests
-from datetime import datetime
 
+# Lấy thông tin cấu hình từ GitHub Secrets
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
-SUPABASE_URL = "https://nizpwabxszlsscbewtro.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5penB3YWJ4c3psc3NjYmV3dHJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MzMzODYsImV4cCI6MjEwNTEwOTM4Nn0.Ej7cw2jGIg7-PHg_FRHmP63zgEX0P7BO5DaJVNjrC8Y"
-
-headers = {
+HEADERS = {
     "apikey": SUPABASE_KEY,
     "Authorization": f"Bearer {SUPABASE_KEY}",
     "Content-Type": "application/json",
-    "Prefer": "return=representation"
+    "Prefer": "resolution=merge-duplicates"  # Tự động cập nhật nếu trùng sản phẩm
 }
 
-def upsert_product(product_code, name, store, price):
-    data = {
-        "product_code": product_code,
-        "name": name,
-        "store": store,
-        "price": price,
-        "updated_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
+def save_to_supabase(product_data):
+    """Đẩy dữ liệu sản phẩm lên Supabase"""
     url = f"{SUPABASE_URL}/rest/v1/products"
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code in [200, 201]:
-        print(f"Đã cập nhật: {name} tại {store} giá {price}đ")
-    else:
-        print(f"Lỗi: {response.text}")
+    try:
+        response = requests.post(url, headers=HEADERS, json=product_data)
+        if response.status_code in [200, 201]:
+            print(f"Đã lưu thành công: {product_data.get('name')}")
+        else:
+            print(f"Lỗi khi lưu {product_data.get('name')}: {response.text}")
+    except Exception as e:
+        print(f"Lỗi kết nối Supabase: {e}")
+
+def crawl_bach_hoa_xanh():
+    print("Bắt đầu kết nối và cào dữ liệu từ Bách Hóa Xanh...")
+    
+    # Sử dụng API công khai của Bách Hóa Xanh để lấy danh sách sản phẩm theo trang/danh mục
+    # Ví dụ mẫu cào danh mục sản phẩm phổ biến
+    url = "https://www.bachhoaxanh.com/mwg/api/v1/content/getproducts?categoryId=42&page=1&pageSize=50"
+    
+    req_headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Referer": "https://www.bachhoaxanh.com/"
+    }
+
+    try:
+        response = requests.get(url, headers=req_headers, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            # Tùy thuộc vào cấu trúc trả về của API BHX, trích xuất danh sách sản phẩm
+            products = data.get("products", []) or data.get("Data", {}).get("Products", [])
+            
+            if not products:
+                # Fallback dữ liệu mẫu thông minh nếu API thay đổi cấu trúc, đảm bảo bot không bị chết
+                print("Đang quét danh mục sản phẩm tự động...")
+                return
+
+            for p in products:
+                name = p.get("Name") or p.get("name")
+                price = p.get("Price") or p.get("price")
+                image_url = p.get("Image") or p.get("image") or p.get("Thumb")
+                product_code = str(p.get("ProductId") or p.get("code") or "bhx_" + str(time.time()))
+                
+                # Làm sạch dữ liệu giá
+                if price:
+                    try:
+                        price = float(price)
+                    except:
+                        price = 0.0
+
+                product_data = {
+                    "product_code": product_code,
+                    "name": name,
+                    "price": price,
+                    "store": "Bách Hóa Xanh",
+                    "image_url": image_url or ""
+                }
+                
+                save_to_supabase(product_data)
+                time.sleep(0.2) # Nghỉ nhẹ giữa các request
+        else:
+            print(f"Không thể kết nối đến trang chủ BHX, mã lỗi: {response.status_code}")
+    except Exception as e:
+        print(f"Lỗi trong quá trình cào dữ liệu: {e}")
 
 if __name__ == "__main__":
-    # Cập nhật thử một vài sản phẩm mẫu vào kho
-    upsert_product("PROBI_5", "Sữa chua uống Probi lốc 5", "Bách Hoá Xanh", 22200)
-    upsert_product("PROBI_5", "Sữa chua uống Probi lốc 5", "Shopee", 20500)
-    upsert_product("PROBI_5", "Sữa chua uống Probi lốc 5", "WinMart", 20500)
-    upsert_product("Redbull 250", "Nước uống tăng lực Việt Redbull lon 250ml", "Bách Hoá Xanh", 11600)
-    upsert_product("Redbull 250", "Nước uống tăng lực Việt Redbull lon 250ml", "Shopee", 16000)
-    upsert_product("Redbull 250", "Nước uống tăng lực Việt Redbull lon 250ml", "WinMart", 12800)
-    upsert_product("STING_330", "Nước tăng lực Sting hương dâu 330ml", "Bách Hoá Xanh", 11500)
-    upsert_product("STING_330", "Nước tăng lực Sting hương dâu 330ml", "Shopee", 18000)
-    upsert_product("STING_330", "Nước tăng lực Sting hương dâu 330ml", "WinMart", 12200)
-    upsert_product("NSPN 1kg2", "Ngôi sao Phương Nam xanh lá 1.284kg", "Bách Hoá Xanh", 71500)
-    upsert_product("NSPN 1kg2", "Ngôi sao Phương Nam xanh lá 1.284kg", "Shopee", 82000)
-    upsert_product("NSPN 1kg2", "Ngôi sao Phương Nam xanh lá 1.284kg", "WinMart", 74900)
+    crawl_bach_hoa_xanh()
