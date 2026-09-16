@@ -1,0 +1,15 @@
+name: Auto Update Price
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Cứ 6 tiếng bot tự chạy một lần
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip install requests
+      - run: python bot.py
