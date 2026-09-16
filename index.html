@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>So Sánh Giá Siêu Thị & E-Commerce</title>
+    <title>So Sánh Giá Bán Lẻ Siêu Thị & Shopee</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -24,9 +24,13 @@
     </div>
 
     <script>
-        // Cấu hình kết nối Supabase của bạn
+        // ==========================================
+        // CẤU HÌNH KẾT NỐI SUPABASE CỦA BẠN
+        // ==========================================
         const SUPABASE_URL = 'https://nizpwabxzslsscbewtro.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl5-your-key-here...'; // Thay bằng key thực tế của bạn nếu cần
+        
+        // HÃY DÁN KEY THẬT CỦA BẠN VÀO DƯỚI ĐÂY (Thay vào chỗ chuỗi dài trong nháy đơn):
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl5-your-key-here...'; 
 
         // Hàm chuẩn hóa tên sản phẩm để gom nhóm các tên gần giống nhau từ các siêu thị
         function normalizeProductName(name) {
