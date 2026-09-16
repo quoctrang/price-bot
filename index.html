@@ -27,20 +27,8 @@
         // ==========================================
         // CẤU HÌNH KẾT NỐI SUPABASE CỦA BẠN
         // ==========================================
-        const SUPABASE_URL = 'https://nizpwabxszlsscbewtro.supabase.co';
-        
-        // HÃY DÁN KEY THẬT CỦA BẠN VÀO DƯỚI ĐÂY:
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5penB3YWJ4c3psc3NjYmV3dHJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MzMzODYsImV4cCI6MjEwNTEwOTM4Nn0.Ej7cw2jGIg7-PHg_FRHmP63zgEX0P7BO5DaJVNjrC8Y'; 
-
-        // Hàm chuẩn hóa tên sản phẩm để gom nhóm các tên gần giống nhau
-        function normalizeProductName(name) {
-            if (!name) return "";
-            return name.toLowerCase()
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "") 
-                .replace(/thung|loc|hop|goi|chai|lon|ml|g|kg/g, "") 
-                .replace(/[^a-z0-9]/g, "") 
-                .trim();
-        }
+        const SUPABASE_URL = 'https://nizpwabxzslsscbewtro.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl5-your-key-here...'; // Thay key thật của bạn vào đây
 
         async function fetchProducts() {
             try {
@@ -76,38 +64,33 @@
                 return;
             }
 
-            // Thuật toán gom nhóm thông minh
+            // Gom nhóm chính xác dựa vào tên sản phẩm (name) để gom mọi cửa hàng vào chung 1 thẻ
             const groupedMap = {};
             filtered.forEach(p => {
-                const keyNorm = normalizeProductName(p.name);
-                
-                let foundKey = Object.keys(groupedMap).find(k => {
-                    return k.includes(keyNorm) || keyNorm.includes(k) || (k.substring(0, 5) === keyNorm.substring(0, 5));
-                });
+                const groupKey = p.name.trim(); // Gom theo đúng tên sản phẩm
 
-                if (!foundKey) {
-                    foundKey = p.name;
-                    groupedMap[foundKey] = {
+                if (!groupedMap[groupKey]) {
+                    groupedMap[groupKey] = {
                         name: p.name,
                         image_url: p.image_url || 'https://via.placeholder.com/150',
                         items: []
                     };
                 }
                 
-                // Tránh trùng cửa hàng trong cùng nhóm
-                if (!groupedMap[foundKey].items.some(i => i.store === p.store)) {
-                    groupedMap[foundKey].items.push(p);
+                // Tránh thêm trùng cùng một cửa hàng vào một thẻ
+                if (!groupedMap[groupKey].items.some(i => i.store === p.store)) {
+                    groupedMap[groupKey].items.push(p);
                 }
             });
 
             // Hiển thị ra giao diện
             Object.values(groupedMap).forEach(group => {
-                // Sắp xếp giá từ thấp đến cao (cửa hàng rẻ nhất tự động lên đầu)
+                // Sắp xếp giá từ thấp đến cao (Cửa hàng rẻ nhất tự động lên đầu)
                 group.items.sort((a, b) => a.price - b.price);
 
                 let itemsHtml = '';
                 group.items.forEach((item, index) => {
-                    const isCheapest = index === 0; // Phần tử đầu tiên sau khi sắp xếp chính là rẻ nhất
+                    const isCheapest = index === 0; // Phần tử đầu tiên là rẻ nhất
                     const priceFormatted = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price);
                     
                     itemsHtml += `
@@ -126,7 +109,7 @@
                     <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex gap-4 items-start">
                         <img src="${group.image_url}" alt="${group.name}" class="w-20 h-20 object-cover rounded-lg border border-gray-100 bg-gray-50 flex-shrink-0" onerror="this.src='https://via.placeholder.com/150'">
                         <div class="flex-1 min-w-0">
-                            <h2 class="font-bold text-gray-800 text-sm md:text-base mb-2 truncate">${group.name}</h2>
+                            <h2 class="font-bold text-gray-800 text-sm md:text-base mb-2">${group.name}</h2>
                             <div class="space-y-1.5">
                                 ${itemsHtml}
                             </div>
