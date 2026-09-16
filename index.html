@@ -3,93 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>So Sánh Giá Tiện Lợi & Shopee</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        h1 { text-align: center; color: #10b981; font-size: 20px; }
-        .search-box input { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none; }
-        .product-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        
-        /* CSS căn chỉnh hình ảnh nằm cạnh tên sản phẩm */
-        .product-header { display: flex; align-items: center; margin-bottom: 10px; }
-        .product-img { width: 60px; height: 60px; object-fit: contain; border-radius: 6px; margin-right: 12px; border: 1px solid #eee; background: #fff; }
-        .product-name { font-weight: bold; font-size: 16px; color: #111; flex: 1; }
-
-        .price-row { display: flex; justify-content: space-between; padding: 8px 12px; background: #f9fafb; margin-top: 6px; border-radius: 6px; }
-        .price-row.cheapest { background: #e6f4ea; border: 1px solid #ceead6; font-weight: bold; color: #137333; }
-    </style>
+    <title>So Sánh Giá Siêu Thị & Cửa Hàng Tiện Lợi</title>
+    <!-- Sử dụng Tailwind CSS cho giao diện đẹp, hiện đại -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen py-8 px-4">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-2xl font-bold text-center text-emerald-600 mb-6">So Sánh Giá Siêu Thị & Cửa Hàng Tiện Lợi</h1>
+        
+        <!-- Ô tìm kiếm sản phẩm -->
+        <div class="mb-6">
+            <input type="text" id="searchInput" placeholder="Gõ tên sản phẩm cần tìm..." 
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
 
-<div class="container">
-    <h1>So Sánh Giá Siêu Thị & Shopee</h1>
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Gõ tên sản phẩm cần tìm..." onkeyup="loadProducts()">
+        <!-- Khu vực hiển thị danh sách sản phẩm so sánh giá -->
+        <div id="productList" class="space-y-6">
+            <p class="text-center text-gray-500">Đang tải dữ liệu sản phẩm...</p>
+        </div>
     </div>
-    <div id="productContainer" style="margin-top: 15px;">
-        <p style="text-align: center; color: #666;">Đang tải dữ liệu...</p>
-    </div>
-</div>
 
-<script>
-    const SUPABASE_URL = "https://nizpwabxszlsscbewtro.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5penB3YWJ4c3psc3NjYmV3dHJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MzMzODYsImV4cCI6MjEwNTEwOTM4Nn0.Ej7cw2jGIg7-PHg_FRHmP63zgEX0P7BO5DaJVNjrC8Y";
+    <script>
+        // Cấu hình kết nối Supabase của bạn
+        const SUPABASE_URL = 'https://nizpwabxzslsscbewtro.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl5-your-key-here...'; // Dùng key hiện tại của bạn
+        
+        // Khởi tạo Supabase client (hoặc dùng fetch trực tiếp từ REST API nếu file thuần)
+        const supabaseUrl = SUPABASE_URL;
+        const supabaseKey = SUPABASE_KEY;
 
-    async function loadProducts() {
-        let keyword = document.getElementById("searchInput").value;
-        let url = `${SUPABASE_URL}/rest/v1/products?select=*`;
-        if(keyword) { url += `&name=ilike.*${keyword}*`; }
+        // Hàm chuẩn hóa tên sản phẩm thông minh để gom nhóm các tên gần giống nhau
+        function normalizeProductName(name) {
+            if (!name) return "";
+            return name.toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Bỏ dấu tiếng Việt
+                .replace(/thung|loc|hop|goi|chai|lon/g, "") // Bỏ các đơn vị quy cách hay lệch nhau
+                .replace(/[^a-z0-9]/g, "") // Chỉ giữ lại chữ và số để so sánh cốt lõi
+                .trim();
+        }
 
-        try {
-            let response = await fetch(url, {
-                headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-            });
-            let data = await response.json();
-            
-            let grouped = {};
-            data.forEach(item => {
-                if (!grouped[item.product_code]) {
-                    // Lưu thêm image_url vào nhóm sản phẩm
-                    grouped[item.product_code] = { name: item.name, image_url: item.image_url, stores: [] };
-                }
-                grouped[item.product_code].stores.push({ store: item.store, price: item.price });
-            });
+        async function fetchProducts() {
+            try {
+                const response = await fetch(`${supabaseUrl}/rest/v1/products?select=*`, {
+                    headers: {
+                        "apikey": supabaseKey,
+                        "Authorization": `Bearer ${supabaseKey}`
+                    }
+                });
+                const data = await response.json();
+                displayProducts(data);
+            } catch (error) {
+                console.error("Lỗi tải dữ liệu:", error);
+                document.getElementById('productList').innerHTML = `<p class="text-center text-red-500">Không thể tải dữ liệu sản phẩm.</p>`;
+            }
+        }
 
-            let container = document.getElementById("productContainer");
-            container.innerHTML = "";
+        function displayProducts(products, filter = "") {
+            const container = document.getElementById('productList');
+            container.innerHTML = '';
 
-            if (Object.keys(grouped).length === 0) {
-                container.innerHTML = "<p style='text-align: center; color: #666;'>Không tìm thấy sản phẩm.</p>";
+            if (!products || products.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-500">Chưa có sản phẩm nào.</p>`;
                 return;
             }
 
-            for (let code in grouped) {
-                let prod = grouped[code];
-                let minPrice = Math.min(...prod.stores.map(s => s.price));
-                let htmlStores = prod.stores.map(s => {
-                    let isCheapest = s.price === minPrice;
-                    return `<div class="price-row ${isCheapest ? 'cheapest' : ''}">
-                                <span>${s.store} ${isCheapest ? '⭐ (Rẻ nhất)' : ''}</span>
-                                <span>${s.price.toLocaleString()} đ</span>
-                            </div>`;
-                }).join('');
+            // Lọc theo từ khóa tìm kiếm
+            const filtered = products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()));
 
-                // Thẻ hiển thị hình ảnh nằm cạnh tên sản phẩm (nếu có link ảnh)
-                let imgTag = prod.image_url ? `<img src="${prod.image_url}" class="product-img" alt="img">` : '';
-
-                container.innerHTML += `
-                    <div class="product-card">
-                        <div class="product-header">
-                            ${imgTag}
-                            <div class="product-name">${prod.name}</div>
-                        </div>
-                        ${htmlStores}
-                    </div>`;
+            if (filtered.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-500">Không tìm thấy sản phẩm phù hợp.</p>`;
+                return;
             }
-        } catch (error) { console.error(error); }
-    }
-    loadProducts();
-</script>
+
+            // Thuật toán gom nhóm thông minh dựa trên tên đã chuẩn hóa
+            const groupedMap = {};
+            filtered.forEach(p => {
+                // Tìm xem đã có nhóm nào có tên gần giống chưa
+                const keyNorm = normalizeProductName(p.name);
+                
+                // Tìm kiếm xem có cụm nào tương đồng cao không để gom chung
+                let foundKey = Object.keys(groupedMap).find(k => {
+                    // Nếu chuỗi chuẩn hóa chứa nhau hoặc trùng khớp cao
+                    return k.includes(keyNorm) || keyNorm.includes(k) || (k.substring(0, 6) === keyNorm.substring(0, 6));
+                });
+
+                if (!foundKey) {
+                    foundKey = p.name; // Lấy tên sản phẩm làm gốc nếu tạo nhóm mới
+                    groupedMap[foundKey] = {
+                        name: p.name,
+                        image_url: p.image_url || 'https://via.placeholder.com/150',
+                        items: []
+                    };
+                }
+                
+                // Tránh thêm trùng cửa hàng trong cùng một nhóm
+                groupedMap[foundKey].items.push(p);
+            });
+
+            // Hiển thị ra giao diện
+            Object.values(groupedMap).forEach(group => {
+                // Sắp xếp các mức giá từ thấp đến cao trong cùng nhóm
+                group.items.sort((a, b) => a.price - b.price);
+                const cheapestPrice = group.items[0].price;
+
+                let itemsHtml = '';
+                group.items.forEach((item, index) => {
+                    const isCheapest = index === 0;
+                    const priceFormatted = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price);
+                    
+                    itemsHtml += `
+                        <div class="flex justify-between items-center p-3 rounded-lg ${isCheapest ? 'bg-emerald-50 border border-emerald-200' : 'bg-white border border-gray-100'}">
+                            <span class="font-medium text-gray-700 flex items-center gap-2">
+                                ${item.store} 
+                                ${isCheapest ? '<span class="text-xs bg-emerald-600 text-white px-2 py-0.5 rounded-full">Rẻ nhất</span>' : ''}
+                            </span>
+                            <span class="font-bold ${isCheapest ? 'text-emerald-700 text-lg' : 'text-gray-800'}">${priceFormatted}</span>
+                        </div>
+                    `;
+                });
+
+                const cardHtml = `
+                    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm flex gap-4 items-start">
+                        <img src="${group.image_url}" alt="${group.name}" class="w-24 h-24 object-cover rounded-lg border border-gray-100 bg-gray-50" onerror="this.src='https://via.placeholder.com/150'">
+                        <div class="flex-1">
+                            <h2 class="font-bold text-gray-800 text-base mb-3">${group.name}</h2>
+                            <div class="space-y-2">
+                                ${itemsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        // Lắng nghe sự kiện gõ tìm kiếm
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            // Gọi lại hàm lấy dữ liệu hoặc lọc từ biến cục bộ
+            fetchProducts(); 
+        });
+
+        // Chạy lần đầu khi mở trang
+        fetchProducts();
+    </script>
 </body>
 </html>
