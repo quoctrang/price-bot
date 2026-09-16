@@ -16,12 +16,12 @@ def sync_products():
     print("Đang nạp dữ liệu chuẩn...")
     
     sample_products = [
-        {
+       {
             "product_code": "bhx_01", 
             "name": "Mì Hảo Hảo chua cay thùng 30 gói", 
             "price": 125000, 
             "store": "Bách Hóa Xanh", 
-            "image_url": "https://images.unsplash.com/photo-1612927601601-6638404738ad?w=150&auto=format&fit=crop&q=80"
+            "image_url": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=150&auto=format&fit=crop&q=80"
         },
         {
             "product_code": "bhx_02", 
