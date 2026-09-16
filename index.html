@@ -10,7 +10,12 @@
         h1 { text-align: center; color: #10b981; font-size: 20px; }
         .search-box input { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none; }
         .product-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .product-name { font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #111; }
+        
+        /* CSS căn chỉnh hình ảnh nằm cạnh tên sản phẩm */
+        .product-header { display: flex; align-items: center; margin-bottom: 10px; }
+        .product-img { width: 60px; height: 60px; object-fit: contain; border-radius: 6px; margin-right: 12px; border: 1px solid #eee; background: #fff; }
+        .product-name { font-weight: bold; font-size: 16px; color: #111; flex: 1; }
+
         .price-row { display: flex; justify-content: space-between; padding: 8px 12px; background: #f9fafb; margin-top: 6px; border-radius: 6px; }
         .price-row.cheapest { background: #e6f4ea; border: 1px solid #ceead6; font-weight: bold; color: #137333; }
     </style>
@@ -28,7 +33,6 @@
 </div>
 
 <script>
-    // DÁN THÔNG TIN SUPABASE CỦA BẠN VÀO ĐÂY
     const SUPABASE_URL = "https://nizpwabxszlsscbewtro.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5penB3YWJ4c3psc3NjYmV3dHJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MzMzODYsImV4cCI6MjEwNTEwOTM4Nn0.Ej7cw2jGIg7-PHg_FRHmP63zgEX0P7BO5DaJVNjrC8Y";
 
@@ -46,7 +50,8 @@
             let grouped = {};
             data.forEach(item => {
                 if (!grouped[item.product_code]) {
-                    grouped[item.product_code] = { name: item.name, stores: [] };
+                    // Lưu thêm image_url vào nhóm sản phẩm
+                    grouped[item.product_code] = { name: item.name, image_url: item.image_url, stores: [] };
                 }
                 grouped[item.product_code].stores.push({ store: item.store, price: item.price });
             });
@@ -70,7 +75,17 @@
                             </div>`;
                 }).join('');
 
-                container.innerHTML += `<div class="product-card"><div class="product-name">${prod.name}</div>${htmlStores}</div>`;
+                // Thẻ hiển thị hình ảnh nằm cạnh tên sản phẩm (nếu có link ảnh)
+                let imgTag = prod.image_url ? `<img src="${prod.image_url}" class="product-img" alt="img">` : '';
+
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-header">
+                            ${imgTag}
+                            <div class="product-name">${prod.name}</div>
+                        </div>
+                        ${htmlStores}
+                    </div>`;
             }
         } catch (error) { console.error(error); }
     }
