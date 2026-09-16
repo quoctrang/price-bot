@@ -2,7 +2,6 @@ import os
 import time
 import requests
 
-# Lấy thông tin cấu hình từ GitHub Secrets
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
@@ -10,11 +9,10 @@ HEADERS = {
     "apikey": SUPABASE_KEY,
     "Authorization": f"Bearer {SUPABASE_KEY}",
     "Content-Type": "application/json",
-    "Prefer": "resolution=merge-duplicates"  # Tự động cập nhật nếu trùng sản phẩm
+    "Prefer": "resolution=merge-duplicates"
 }
 
 def save_to_supabase(product_data):
-    """Đẩy dữ liệu sản phẩm lên Supabase"""
     url = f"{SUPABASE_URL}/rest/v1/products"
     try:
         response = requests.post(url, headers=HEADERS, json=product_data)
@@ -28,34 +26,41 @@ def save_to_supabase(product_data):
 def crawl_bach_hoa_xanh():
     print("Bắt đầu kết nối và cào dữ liệu từ Bách Hóa Xanh...")
     
-    # Sử dụng API công khai của Bách Hóa Xanh để lấy danh sách sản phẩm theo trang/danh mục
-    # Ví dụ mẫu cào danh mục sản phẩm phổ biến
-    url = "https://www.bachhoaxanh.com/mwg/api/v1/content/getproducts?categoryId=42&page=1&pageSize=50"
+    # URL API danh mục sản phẩm chính thức của Bách Hóa Xanh
+    url = "https://www.bachhoaxanh.com/mwg/api/v1/content/getproducts?categoryId=42&page=1&pageSize=20"
     
+    # Bộ giả lập trình duyệt chi tiết để vượt tường lửa
     req_headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Referer": "https://www.bachhoaxanh.com/"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Referer": "https://www.bachhoaxanh.com/",
+        "Origin": "https://www.bachhoaxanh.com",
+        "Sec-Ch-Ua": '"Chromium";v="122", "Not(A:Brand";v="8", "Google Chrome";v="122"',
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Ch-Ua-Platform": '"Windows"',
     }
 
     try:
-        response = requests.get(url, headers=req_headers, timeout=10)
+        # Thêm cấu hình Session để giữ kết nối ổn định hơn
+        session = requests.Session()
+        response = session.get(url, headers=req_headers, timeout=15)
+        
         if response.status_code == 200:
             data = response.json()
-            # Tùy thuộc vào cấu trúc trả về của API BHX, trích xuất danh sách sản phẩm
             products = data.get("products", []) or data.get("Data", {}).get("Products", [])
             
             if not products:
-                # Fallback dữ liệu mẫu thông minh nếu API thay đổi cấu trúc, đảm bảo bot không bị chết
-                print("Đang quét danh mục sản phẩm tự động...")
+                print("Không tìm thấy sản phẩm trong phản hồi từ API.")
                 return
 
+            print(f"Đã tìm thấy {len(products)} sản phẩm. Đang đẩy lên Supabase...")
             for p in products:
                 name = p.get("Name") or p.get("name")
                 price = p.get("Price") or p.get("price")
                 image_url = p.get("Image") or p.get("image") or p.get("Thumb")
                 product_code = str(p.get("ProductId") or p.get("code") or "bhx_" + str(time.time()))
                 
-                # Làm sạch dữ liệu giá
                 if price:
                     try:
                         price = float(price)
@@ -71,9 +76,9 @@ def crawl_bach_hoa_xanh():
                 }
                 
                 save_to_supabase(product_data)
-                time.sleep(0.2) # Nghỉ nhẹ giữa các request
+                time.sleep(0.3)
         else:
-            print(f"Không thể kết nối đến trang chủ BHX, mã lỗi: {response.status_code}")
+            print(f"Bách Hóa Xanh từ chối kết nối, mã lỗi: {response.status_code}")
     except Exception as e:
         print(f"Lỗi trong quá trình cào dữ liệu: {e}")
 
