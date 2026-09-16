@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>So Sánh Giá Tiện Lợi & Shopee</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f3f4f6; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: #10b981; font-size: 20px; }
+        .search-box input { width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; outline: none; }
+        .product-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .product-name { font-weight: bold; font-size: 16px; margin-bottom: 8px; color: #111; }
+        .price-row { display: flex; justify-content: space-between; padding: 8px 12px; background: #f9fafb; margin-top: 6px; border-radius: 6px; }
+        .price-row.cheapest { background: #e6f4ea; border: 1px solid #ceead6; font-weight: bold; color: #137333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>So Sánh Giá Siêu Thị & Shopee</h1>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Gõ tên sản phẩm cần tìm..." onkeyup="loadProducts()">
+    </div>
+    <div id="productContainer" style="margin-top: 15px;">
+        <p style="text-align: center; color: #666;">Đang tải dữ liệu...</p>
+    </div>
+</div>
+
+<script>
+    // DÁN THÔNG TIN SUPABASE CỦA BẠN VÀO ĐÂY
+    const SUPABASE_URL = "https://nizpwabxszlsscbewtro.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5penB3YWJ4c3psc3NjYmV3dHJvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1MzMzODYsImV4cCI6MjEwNTEwOTM4Nn0.Ej7cw2jGIg7-PHg_FRHmP63zgEX0P7BO5DaJVNjrC8Y";
+
+    async function loadProducts() {
+        let keyword = document.getElementById("searchInput").value;
+        let url = `${SUPABASE_URL}/rest/v1/products?select=*`;
+        if(keyword) { url += `&name=ilike.*${keyword}*`; }
+
+        try {
+            let response = await fetch(url, {
+                headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+            });
+            let data = await response.json();
+            
+            let grouped = {};
+            data.forEach(item => {
+                if (!grouped[item.product_code]) {
+                    grouped[item.product_code] = { name: item.name, stores: [] };
+                }
+                grouped[item.product_code].stores.push({ store: item.store, price: item.price });
+            });
+
+            let container = document.getElementById("productContainer");
+            container.innerHTML = "";
+
+            if (Object.keys(grouped).length === 0) {
+                container.innerHTML = "<p style='text-align: center; color: #666;'>Không tìm thấy sản phẩm.</p>";
+                return;
+            }
+
+            for (let code in grouped) {
+                let prod = grouped[code];
+                let minPrice = Math.min(...prod.stores.map(s => s.price));
+                let htmlStores = prod.stores.map(s => {
+                    let isCheapest = s.price === minPrice;
+                    return `<div class="price-row ${isCheapest ? 'cheapest' : ''}">
+                                <span>${s.store} ${isCheapest ? '⭐ (Rẻ nhất)' : ''}</span>
+                                <span>${s.price.toLocaleString()} đ</span>
+                            </div>`;
+                }).join('');
+
+                container.innerHTML += `<div class="product-card"><div class="product-name">${prod.name}</div>${htmlStores}</div>`;
+            }
+        } catch (error) { console.error(error); }
+    }
+    loadProducts();
+</script>
+</body>
+</html>
