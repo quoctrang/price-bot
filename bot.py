@@ -12,21 +12,9 @@ HEADERS = {
     "Prefer": "resolution=merge-duplicates"
 }
 
-def save_to_supabase(product_data):
-    url = f"{SUPABASE_URL}/rest/v1/products"
-    try:
-        response = requests.post(url, headers=HEADERS, json=product_data)
-        if response.status_code in [200, 201]:
-            print(f"Đã lưu thành công: {product_data.get('name')}")
-        else:
-            print(f"Lỗi khi lưu {product_data.get('name')}: {response.text}")
-    except Exception as e:
-        print(f"Lỗi kết nối Supabase: {e}")
-
 def sync_products():
-    print("Đang nạp lại dữ liệu sản phẩm kèm link ảnh chuẩn...")
+    print("Đang nạp dữ liệu chuẩn...")
     
-    # Sử dụng link hình ảnh minh họa ổn định, sắc nét
     sample_products = [
         {
             "product_code": "bhx_01", 
@@ -65,10 +53,17 @@ def sync_products():
         }
     ]
 
+    url = f"{SUPABASE_URL}/rest/v1/products"
     for p in sample_products:
-        save_to_supabase(p)
-        time.sleep(0.2)
-    print("Đã hoàn tất nạp lại dữ liệu!")
+        try:
+            response = requests.post(url, headers=HEADERS, json=p)
+            if response.status_code in [200, 201]:
+                print(f"Đã lưu: {p['name']}")
+            else:
+                print(f"Lỗi: {response.text}")
+        except Exception as e:
+            print(f"Lỗi kết nối: {e}")
+        time.sleep(0.1)
 
 if __name__ == "__main__":
     sync_products()
