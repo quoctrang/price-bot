@@ -13,15 +13,16 @@ HEADERS = {
 }
 
 def sync_products():
-    print("Đang nạp dữ liệu chuẩn...")
+    print("Đang cập nhật danh sách sản phẩm từ các siêu thị và cửa hàng tiện lợi...")
     
     sample_products = [
-       {
+        # --- Sản phẩm tại Bách Hóa Xanh ---
+        {
             "product_code": "bhx_01", 
             "name": "Mì Hảo Hảo chua cay thùng 30 gói", 
             "price": 125000, 
             "store": "Bách Hóa Xanh", 
-            "image_url": "https://down-vn.img.susercontent.com/file/sg-11134201-23010-er2h7qw0uxmv6f"
+            "image_url": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=150&auto=format&fit=crop&q=80"
         },
         {
             "product_code": "bhx_02", 
@@ -30,26 +31,41 @@ def sync_products():
             "store": "Bách Hóa Xanh", 
             "image_url": "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=150&auto=format&fit=crop&q=80"
         },
+
+        # --- Sản phẩm tương tự tại Circle K ---
         {
-            "product_code": "bhx_03", 
-            "name": "Sữa tươi tiệt trùng Vinamilk ít đường lốc 4 hộp 180ml", 
-            "price": 32000, 
-            "store": "Bách Hóa Xanh", 
-            "image_url": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=150&auto=format&fit=crop&q=80"
+            "product_code": "ck_02", 
+            "name": "Thùng 24 lon nước ngọt Coca Cola 320ml", 
+            "price": 220000, 
+            "store": "Circle K", 
+            "image_url": "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=150&auto=format&fit=crop&q=80"
         },
+
+        # --- Sản phẩm tại FamilyMart ---
         {
-            "product_code": "bhx_04", 
-            "name": "Dầu ăn Neptune Light 1L", 
-            "price": 58000, 
-            "store": "Bách Hóa Xanh", 
-            "image_url": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=150&auto=format&fit=crop&q=80"
+            "product_code": "fm_02", 
+            "name": "Thùng 24 lon nước ngọt Coca Cola 320ml", 
+            "price": 215000, 
+            "store": "FamilyMart", 
+            "image_url": "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=150&auto=format&fit=crop&q=80"
         },
+
+        # --- Sản phẩm tại 7-Eleven ---
         {
-            "product_code": "bhx_05", 
-            "name": "Nước giặt OMO Matic đậm đặc cửa trên 3.1kg", 
-            "price": 165000, 
-            "store": "Bách Hóa Xanh", 
-            "image_url": "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=150&auto=format&fit=crop&q=80"
+            "product_code": "sev_01", 
+            "name": "Mì Hảo Hảo chua cay thùng 30 gói", 
+            "price": 130000, 
+            "store": "7-Eleven", 
+            "image_url": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=150&auto=format&fit=crop&q=80"
+        },
+
+        # --- Sản phẩm tại Ministop ---
+        {
+            "product_code": "ms_01", 
+            "name": "Mì Hảo Hảo chua cay thùng 30 gói", 
+            "price": 128000, 
+            "store": "Ministop", 
+            "image_url": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=150&auto=format&fit=crop&q=80"
         }
     ]
 
@@ -58,12 +74,14 @@ def sync_products():
         try:
             response = requests.post(url, headers=HEADERS, json=p)
             if response.status_code in [200, 201]:
-                print(f"Đã lưu: {p['name']}")
+                print(f"Đã lưu: {p['name']} tại {p['store']}")
             else:
                 print(f"Lỗi: {response.text}")
         except Exception as e:
             print(f"Lỗi kết nối: {e}")
         time.sleep(0.1)
+
+    print("Hoàn tất cập nhật dữ liệu các cửa hàng tiện lợi!")
 
 if __name__ == "__main__":
     sync_products()
