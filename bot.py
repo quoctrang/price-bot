@@ -36,13 +36,22 @@ RAW_PRODUCTS = [
     {"code": "m_02", "name": "Mì Omachi sườn hầm ngũ quả gói 80g", "base_price": 8500, "img": "https://img.websosanh.vn/v2/users/root_product/images/thung-30-goi-mi-khoai-tay-omac/xb1gxlvsl5qjv.jpg"},
     {"code": "m_03", "name": "Thùng 30 gói mì Omachi khoai tây", "base_price": 240000, "img": "https://img.tgdd.vn/imgt/bhx/f_webp,fit_outside,quality_95,s_720x584/https://cdn.tgdd.vn/Products/Images/2565/175895/bhx/thung-30-goi-mi-khoai-tay-omachi-xot-bo-ham-80g-202303141450332772.jpg"},
 
+    # Sữa tươi, cream, sữa đặc & cà phê (Đã cập nhật ảnh theo yêu cầu)
+    {"code": "a_01", "name": "Sữa tươi tiệt trùng Vinamilk 1L", "base_price": 40000, "img": "https://img.lazcdn.com/g/p/0b34070b77b2109b2951a35a75fe3226.jpg_720x720q80.jpg"},
+    {"code": "a_02", "name": "Sữa tươi tiệt trùng TH true MILK 1L", "base_price": 41000, "img": "https://img.tgdd.vn/imgt/ecom/f_webp,fit_outside,quality_95/https:/cdnv2.tgdd.vn/pim/cdn/images/202506/thung-12-hop-sua-tuoi-th-true-milk-it-duong-1-lit-9144833.jpg"},
+    {"code": "a_03", "name": "Sữa tươi tiệt trùng Dutch Lady 965ml", "base_price": 36500, "img": "https://suachobeyeu.vn/upload/sua-tuoi/sua-co-gai-ha-lan/180ml-khong-duong/sua-tiet-trung-co-gai-ha-lan-active-20-hop-180ml-khong-duong-2.jpg"},
+    {"code": "a_04", "name": "Sữa Đậu Nành Fami Nguyên Chất hoặc Fami Canxi Hộp 1L", "base_price": 22000, "img": "https://www.lottemart.vn/media/catalog/product/cache/0x0/8/9/8934614030066-1.jpg/https://www.lottemart.vn/media/catalog/product/cache/0x0/8/9/8934614030448-4.jpg"},
+    {"code": "a_05", "name": "Ngôi Sao Phương Nam xanh lá - Hộp giấy 1284gr", "base_price": 69000, "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQN9dDjM-uBaJ10ZpVongd0sbm5nqhlW52EzvkbZXwh41nOuNDotfXICzh7&s=10"},
+    {"code": "a_06", "name": "Cà phê sữa MacCoffee Café Phố Gold 3in1 290g", "base_price": 77000, "img": "https://cdn.tgdd.vn/Products/Images/2524/309454/bhx/ca-phe-sua-maccoffee-cafe-pho-gold-3in1-290g-202307071051087160.jpg"},
+    
+    
     # Các sản phẩm còn lại giữ nguyên danh mục đầy đủ ban đầu
-    {"code": "n_02", "name": "Nước tinh khiết Dasani 1.5L", "base_price": 9500, "img": "https://img.tgdd.vn/imgt/bhx/f_webp,fit_outside,quality_95,s_720x584/https://cdn.tgdd.vn/Products/Images/2683/229643/bhx/nuoc-tinh-khiet-dasani-1-5l-202203071607519131.jpg"},
-    {"code": "n_08", "name": "Nước ngọt 7 Up lon 320ml", "base_price": 10000, "img": "https://img.tgdd.vn/imgt/bhx/f_webp,fit_outside,quality_95,s_720x584/https://cdn.tgdd.vn/Products/Images/2445/229633/bhx/nuoc-ngot-7-up-320ml-202008311545419077.jpg"},
-    {"code": "tl_02", "name": "Nước tăng lực Redbull lon 250ml", "base_price": 11500, "img": "https://img.tgdd.vn/imgt/bhx/f_webp,fit_outside,quality_95,s_720x584/https://cdn.tgdd.vn/Products/Images/2451/195984/bhx/nuoc-tang-luc-red-bull-250ml-202010151528341120.jpg"},
-    {"code": "tl_04", "name": "Nước tăng lực Compact lon 250ml", "base_price": 10500, "img": "https://img.tgdd.vn/imgt/bhx/f_webp,fit_outside,quality_95,s_720x584/https://cdn.tgdd.vn/Products/Images/2451/230113/bhx/nuoc-tang-luc-compact-250ml-202009101004128941.jpg"},
-    {"code": "tl_05", "name": "Nước tăng lực Warrior hương dâu 330ml", "base_price": 10000, "img": "https://img.tgdd.vn/imgt/bhx/f_webp,fit_outside,quality_95,s_720x584/https://cdn.tgdd.vn/Products/Images/2451/220556/bhx/nuoc-tang-luc-warrior-huong-dau-330ml-202009081048450125.jpg"},
-    {"code": "tl_06", "name": "Nước tăng lực Number 1 chai 330ml", "base_price": 9500, "img": "https://img.tgdd.vn/imgt/bhx/f_webp,fit_outside,quality_95,s_720x584/https://cdn.tgdd.vn/Products/Images/2451/229656/bhx/nuoc-tang-luc-number-1-330ml-202008311537231450.jpg"}
+    {"code": "n_02", "name": "Nước tinh khiết Dasani 1.5L", "base_price": 9500, "img": "https://cdn.go-vietnam.vn/sale-products/H2-00272023-1.png?v=10"},
+    {"code": "n_08", "name": "Nước ngọt 7 Up lon 320ml", "base_price": 10000, "img": "https://product.hstatic.net/1000301274/product/_10100996__7up_320ml_sleek_lon_0366766c074a4b538595ed8d91dc6b0d.png"},
+    {"code": "tl_02", "name": "Nước tăng lực Redbull Việt Nam lon 250ml", "base_price": 11500, "img": "https://ann.com.vn/image/1-lon-nuoc-tang-luc-red-bull-viet-nam-nuoc-ngot-bo-cung-250ml-lon-1.png"},
+    {"code": "tl_04", "name": "Nước tăng lực Compact lon 250ml", "base_price": 10500, "img": "https://cdn.tgdd.vn/Products/Images/2451/230113/bhx/nuoc-tang-luc-compact-250ml-202009101004128941.jpg"},
+    {"code": "tl_05", "name": "Nước tăng lực Warrior hương dâu 330ml", "base_price": 10000, "img": "https://cdn.tgdd.vn/Products/Images/3226/209218/bhx/6-chai-nuoc-tang-luc-warrior-huong-dau-330ml-202408130924175303.jpg"},
+    {"code": "tl_06", "name": "Nước tăng lực Number 1 chai 330ml", "base_price": 9500, "img": "https://pvmarthanoi.com.vn/wp-content/uploads/2023/02/nuoc-tang-luc-number1-330ml-202004291021136563.jpg"}
 ]
 
 STORES = ["Bách Hóa Xanh", "WinMart", "Co.opmart", "GO!", "Shopee"]
