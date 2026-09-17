@@ -40,7 +40,7 @@ RAW_PRODUCTS = [
     {"code": "a_01", "name": "Sữa tươi tiệt trùng Vinamilk 1L", "base_price": 40000, "img": "https://img.lazcdn.com/g/p/0b34070b77b2109b2951a35a75fe3226.jpg_720x720q80.jpg"},
     {"code": "a_02", "name": "Sữa tươi tiệt trùng TH true MILK 1L", "base_price": 41000, "img": "https://img.tgdd.vn/imgt/ecom/f_webp,fit_outside,quality_95/https:/cdnv2.tgdd.vn/pim/cdn/images/202506/thung-12-hop-sua-tuoi-th-true-milk-it-duong-1-lit-9144833.jpg"},
     {"code": "a_03", "name": "Sữa tươi tiệt trùng Dutch Lady 965ml", "base_price": 36500, "img": "https://suachobeyeu.vn/upload/sua-tuoi/sua-co-gai-ha-lan/180ml-khong-duong/sua-tiet-trung-co-gai-ha-lan-active-20-hop-180ml-khong-duong-2.jpg"},
-    {"code": "a_04", "name": "Sữa Đậu Nành Fami Nguyên Chất hoặc Fami Canxi Hộp 1L", "base_price": 22000, "img": "https://www.lottemart.vn/media/catalog/product/cache/0x0/8/9/8934614030066-1.jpg/https://www.lottemart.vn/media/catalog/product/cache/0x0/8/9/8934614030448-4.jpg"},
+    {"code": "a_04", "name": "Sữa Đậu Nành Fami Nguyên Chất hoặc Fami Canxi Hộp 1L", "base_price": 22000, "img": "https://www.lottemart.vn/media/catalog/product/cache/0x0/8/9/8934614030066-1.jpg, https://www.lottemart.vn/media/catalog/product/cache/0x0/8/9/8934614030448-4.jpg"},
     {"code": "a_05", "name": "Ngôi Sao Phương Nam xanh lá - Hộp giấy 1284gr", "base_price": 69000, "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQN9dDjM-uBaJ10ZpVongd0sbm5nqhlW52EzvkbZXwh41nOuNDotfXICzh7&s=10"},
     {"code": "a_06", "name": "Cà phê sữa MacCoffee Café Phố Gold 3in1 290g", "base_price": 77000, "img": "https://cdn.tgdd.vn/Products/Images/2524/309454/bhx/ca-phe-sua-maccoffee-cafe-pho-gold-3in1-290g-202307071051087160.jpg"},
     
